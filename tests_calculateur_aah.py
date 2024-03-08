@@ -10,7 +10,7 @@ RESET = '\033[0m'
 
 
 def check(resultat, resultat_attendu):
-    if(resultat == resultat_attendu):
+    if resultat == resultat_attendu:
         status = GREEN + "[PASS]" + RESET
     else:
         status = RED + "[FAIL]" + RESET
