@@ -3,6 +3,7 @@ from personne import Personne
 from datetime import date
 from date_mensuelle import DateMensuelle
 from ressource import Ressource
+from foyer import Foyer
 
 
 class Controleur:
@@ -44,39 +45,39 @@ class Controleur:
         nom = self.vue.demander_nom_allocataire()
         return self.__recuperer_personne(nom)
 
-    def recuperer_conjoint(self):
+    def recuperer_conjoint(self, foyer: Foyer):
         """"
         Communique avec la vue pour générer une Personne
         correspondant au conjoint
+        Le conjoint est ajouté au foyer passé en paramètre
         """
         a_conjoint = self.vue.demander_si_conjoint()
         if a_conjoint:
             nom = self.vue.demander_nom_conjoint()
-            return self.__recuperer_personne(nom)
-        return None
+            conjoint = self.__recuperer_personne(nom)
+            foyer.definir_conjoint(conjoint)
 
-    def recuperer_personnes_a_charge(self):
+    def recuperer_personnes_a_charge(self, foyer: Foyer):
         """
         Communique avec la vue pour générer une collection de personnes à charge
         Retourne la collection
+        Les personnes a charge sont ajoutées au foyer passé en paramètre
         """
+        self.afficher_foyer(foyer)
         a_personne_a_charge = self.vue.demande_si_personne_a_charge()
-        personnes_a_charge = []
         while a_personne_a_charge:
             nom = self.vue.demander_nom_personne_a_charge()
             personne = self.__recuperer_personne(nom)
-            personnes_a_charge.append(personne)
+            foyer.ajouter_personne_a_charge(personne)
+            self.afficher_foyer(foyer)
             a_personne_a_charge = self.vue.demande_si_personne_a_charge()
-        return personnes_a_charge
 
     def definir_mois_simule(self):
         return self.__aujourdhui()
 
     def calculer_aah(self,
                      date: DateMensuelle,
-                     allocataire: Personne,
-                     conjoint: Personne,
-                     *personnes_a_charge):
+                     foyer: Foyer):
         """
         Exécute le calcul de l’AAH avec le calculateur, et retourne le résultat
 
@@ -87,25 +88,23 @@ class Controleur:
                                     le calcul est conjugalisé
             personnes_a_charge: collection de Personne à charge
         """
-        calculateur = CalculateurAAH(allocataire)
-        if conjoint is not None:
-            calculateur.definir_conjoint(conjoint)
-        for personne in personnes_a_charge:
-            calculateur.ajouter_personne_a_charge(personne)
+        calculateur = CalculateurAAH(foyer)
         aah = calculateur.calculer_AAH(date)
         return aah
 
     def afficher_resultat_aah(self, montant_aah):
         self.vue.afficher_resultat_calcul("aah", montant_aah)
 
+    def afficher_foyer(self, foyer):
+        self.vue.afficher_foyer(foyer)
+
     def run(self):
         self.demarrer_vue()
         allocataire = self.recuperer_allocataire()
-        conjoint = self.recuperer_conjoint()
-        personnes_a_charge = self.recuperer_personnes_a_charge()
+        foyer = Foyer(allocataire)
+        self.recuperer_conjoint(foyer)
+        self.recuperer_personnes_a_charge(foyer)
+
         mois = self.definir_mois_simule()
-        montant_aah = self.calculer_aah(mois,
-                                        allocataire,
-                                        conjoint,
-                                        personnes_a_charge)
+        montant_aah = self.calculer_aah(mois, foyer)
         self.afficher_resultat_aah(montant_aah)

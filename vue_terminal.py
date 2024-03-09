@@ -51,3 +51,6 @@ class VueTerminal:
 
     def afficher_resultat_calcul(self, nom_aide, resultat):
         print(f"Montant de {nom_aide} : {resultat}€")
+
+    def afficher_foyer(self, foyer):
+        print(foyer)

@@ -3,6 +3,7 @@ from personne import Personne
 from ressource import Ressource
 from date_mensuelle import DateMensuelle
 from datetime import date
+from foyer import Foyer
 
 RED = '\033[31m'
 GREEN = '\033[32m'
@@ -25,17 +26,18 @@ def test_celib(
         *enfants: Personne
         ):
     print(nom_test)
+    foyer = Foyer(allocataire=allocataire)
+    for enfant in enfants:
+        foyer.ajouter_personne_a_charge(enfant)
+
     mois_teste = DateMensuelle(3, 2024)
-    calculateur = CalculateurAAH(allocataire)
+    calculateur = CalculateurAAH(foyer)
     ressources_decembre = Ressource(revenu_mensuel, DateMensuelle(12, 2023))
     ressources_janvier = Ressource(revenu_mensuel, DateMensuelle(1, 2024))
     ressources_fevrier = Ressource(revenu_mensuel, DateMensuelle(2, 2024))
     allocataire.ajouter_ressource(ressources_decembre)
     allocataire.ajouter_ressource(ressources_janvier)
     allocataire.ajouter_ressource(ressources_fevrier)
-
-    for enfant in enfants:
-        calculateur.ajouter_personne_a_charge(enfant)
 
     aah = calculateur.calculer_AAH(mois_teste)
     check(aah, resultat_attendu)
@@ -52,7 +54,12 @@ def test_couple(
         ):
     print(nom_test)
     mois_teste = DateMensuelle(3, 2024)
-    calculateur = CalculateurAAH(allocataire)
+    foyer = Foyer(allocataire)
+    foyer.definir_conjoint(conjoint=partenaire)
+    for enfant in enfants:
+        foyer.ajouter_personne_a_charge(enfant)
+
+    calculateur = CalculateurAAH(foyer)
     ressources_decembre = Ressource(revenu_mensuel, DateMensuelle(12, 2023))
     ressources_janvier = Ressource(revenu_mensuel, DateMensuelle(1, 2024))
     ressources_fevrier = Ressource(revenu_mensuel, DateMensuelle(2, 2024))
@@ -69,10 +76,6 @@ def test_couple(
     partenaire.ajouter_ressource(ressources_decembre_partenaire)
     partenaire.ajouter_ressource(ressources_janvie_partenaire)
     partenaire.ajouter_ressource(ressources_fevrier_partenaire)
-    calculateur.definir_conjoint(partenaire)
-
-    for enfant in enfants:
-        calculateur.ajouter_personne_a_charge(enfant)
 
     aah = calculateur.calculer_AAH(mois_teste)
     check(aah, resultat_attendu)
