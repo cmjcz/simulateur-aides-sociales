@@ -1,3 +1,7 @@
+from functools import total_ordering
+
+
+@total_ordering
 class DateMensuelle:
     """
     Objet immutable
@@ -60,6 +64,13 @@ class DateMensuelle:
             return False
         return self._mois == other._mois and self._annee == other._annee
 
+    def __lt__(self, other: object) -> bool:
+        if not isinstance(other, DateMensuelle):
+            return False
+        if self.annee == other.annee:
+            return self.mois < other.mois
+        return self.annee < other.annee
+
     def __hash__(self) -> int:
         return hash((self._annee, self._mois))
 
@@ -92,3 +103,15 @@ if __name__ == "__main__":
     print(f"{d1} = {d3} ? {d1 == d3}")
     print(f"{d1} != {d4} ? {d1 != d4}")
     print(f"{d1} != {d5} ? {d1 != d5}")
+
+    print("Test infériorité")
+    print(f"{d1} < {d2} ? {d1 < d2}")
+    print(f"{d2} < {d1} ? {d2 < d1}")
+    print(f"{d1} < {d4} ? {d1 < d4}")
+    print(f"{d2} < {d4} ? {d2 < d4}")
+    
+    print("Test supériorité")
+    print(f"{d1} > {d2} ? {d1 > d2}")
+    print(f"{d2} > {d1} ? {d2 > d1}")
+    print(f"{d1} > {d4} ? {d1 > d4}")
+    print(f"{d2} > {d4} ? {d2 > d4}")

@@ -35,44 +35,44 @@ class CalculateurAAH:
         plafond_ressources += 0.405 * self.AAH_TAUX_PLEIN * self.foyer.nombre_personnes_a_charge()
         return plafond_ressources
 
-    def __calculer_ressources_allocataire(self, date: DateMensuelle):
+    def __calculer_ressources_allocataire(self, periode_reference):
         ressources_trimestres = 0
-        for mois in range(1, 4):
-            ressources_mois = self.foyer.ressource_allocataire(date - mois)
+        for mois in periode_reference:
+            ressources_mois = self.foyer.ressource_allocataire(mois)
             ressources_trimestres += ressources_mois
-        ressources_moyennes = ressources_trimestres / 3
+        ressources_moyennes = ressources_trimestres / len(periode_reference)
         seuil = 0.3 * self.SMIC_MENSUEL_BRUT
         ressources_seuil1 = plafond(ressources_moyennes, seuil)
         ressources_seuil2 = plancher(ressources_moyennes - seuil, 0)
         ressources = ressources_seuil1 * self.TAUX_PREMIERE_TRANCHE + ressources_seuil2 * self.TAUX_SECONDE_TRANCHE
         return ressources
 
-    def __calculer_ressources_conjoint(self, date: DateMensuelle):
+    def __calculer_ressources_conjoint(self, periode_reference):
         if not self.foyer.contient_conjoint():
             return 0
         nombre_personne_a_charge = self.foyer.nombre_personnes_a_charge()
         abattement_annuel = self.ABATTEMENT_ANNUEL_CONJOINT + nombre_personne_a_charge * self.ABATTEMENT_ANNUEL_CONJOINT_PAR_ENFANT
         abattement_trimestriel = abattement_annuel / 4
         ressources_trimestre = 0
-        for mois in range(1, 4):
-            ressources_mois = self.foyer.ressource_conjoint(date - mois)
+        for mois in periode_reference:
+            ressources_mois = self.foyer.ressource_conjoint(mois)
             ressources_trimestre += ressources_mois
         ressources_trimestre = abattement(
             ressources_trimestre,
             abattement_trimestriel)
-        ressources_moyennes = ressources_trimestre / 3
+        ressources_moyennes = ressources_trimestre / len(periode_reference)
         return plancher(ressources_moyennes, 0)
 
-    def calculer_AAH(self, date: DateMensuelle):
+    def calculer_AAH(self, periode_reference):
         """
-        Calcule l’AAH pour le foyer définit pour une date donnée
+        Calcule l’AAH pour une periode de reference donnée
 
         Paramètres:
-            date (DateMensuelle): mois pour lequel calculer l’AAH
+            periode_preference (Set de DateMensuelle): mois utilisé pour calculer l’AAH
         """
         plafond_ressources = self.__calculer_plafond_ressources()
-        ressources_allocataire = self.__calculer_ressources_allocataire(date)
-        ressources_conjoint = self.__calculer_ressources_conjoint(date)
+        ressources_allocataire = self.__calculer_ressources_allocataire(periode_reference)
+        ressources_conjoint = self.__calculer_ressources_conjoint(periode_reference)
         ressources_foyer = ressources_allocataire + ressources_conjoint
         aah = plafond_ressources - ressources_foyer
         aah = plafond(aah, self.AAH_TAUX_PLEIN)

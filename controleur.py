@@ -1,24 +1,14 @@
 from calculateur_aah import CalculateurAAH
 from personne import Personne
-from datetime import date
 from date_mensuelle import DateMensuelle
 from ressource import Ressource
 from foyer import Foyer
+from calculateur_trimestre_reference_aah import CalculateurTrimestreReferenceAAH
 
 
 class Controleur:
     def __init__(self, vue):
         self.vue = vue
-
-    def __aujourdhui(self):
-        """
-        Retourne le mois en cours
-        Sous un objet DateMensuelle
-        """
-        today = date.today()
-        mois = today.month
-        annee = today.year
-        return DateMensuelle(mois, annee)
 
     def demarrer_vue(self):
         self.vue.message_bienvenue()
@@ -30,10 +20,9 @@ class Controleur:
         """
         date_naissance = self.vue.demander_date_naissance(nom)
         personne = Personne(nom, date_naissance)
-        aujourdhui = self.__aujourdhui()
-        for mois in range(1, 4):
-            montant = self.vue.demander_ressource(nom, aujourdhui - mois)
-            ressource = Ressource(montant, aujourdhui - mois)
+        for mois in self.definir_periode_reference_simulee():
+            montant = self.vue.demander_ressource(nom, mois)
+            ressource = Ressource(montant, mois)
             personne.ajouter_ressource(ressource)
         return personne
 
@@ -72,24 +61,30 @@ class Controleur:
             self.afficher_foyer(foyer)
             a_personne_a_charge = self.vue.demande_si_personne_a_charge()
 
-    def definir_mois_simule(self):
-        return self.__aujourdhui()
+    def definir_periode_reference_simulee(self):
+        """
+        Cette méthode sert à retourner une période de référence
+        utilisée temporairement pour les tests du programme
+        en attendant d’avoir une vue adaptée pour la calculer
+        automatiquement
+        On part du principe que l’AAH a été obtenue à partir de Décembre 2023
+        et qu’on simule le mois de Mars 2024
+        """
+        calculateur = CalculateurTrimestreReferenceAAH(DateMensuelle(12, 2023))
+        return calculateur.calculer_trimestre_reference(DateMensuelle(3, 2024))
 
     def calculer_aah(self,
-                     date: DateMensuelle,
+                     periode_reference,
                      foyer: Foyer):
         """
         Exécute le calcul de l’AAH avec le calculateur, et retourne le résultat
 
         Paramètres:
-            date (DateMensuelle): mois sur lequel calculer l’AAH
-            allocataire (Personne): Allocataire pour lequel calculer l’aide
-            conjoint (Personne): Conjoint de l’allocataire si
-                                    le calcul est conjugalisé
-            personnes_a_charge: collection de Personne à charge
+            periode_reference: ensemble des mois sur lequel se baser pour calculer l’AAH
+            foyer (Foyer): foyer pour lequel calculer l’AAH
         """
         calculateur = CalculateurAAH(foyer)
-        aah = calculateur.calculer_AAH(date)
+        aah = calculateur.calculer_AAH(periode_reference)
         return aah
 
     def afficher_resultat_aah(self, montant_aah):
@@ -105,6 +100,6 @@ class Controleur:
         self.recuperer_conjoint(foyer)
         self.recuperer_personnes_a_charge(foyer)
 
-        mois = self.definir_mois_simule()
-        montant_aah = self.calculer_aah(mois, foyer)
+        periode_reference = self.definir_periode_reference_simulee()
+        montant_aah = self.calculer_aah(periode_reference, foyer)
         self.afficher_resultat_aah(montant_aah)
