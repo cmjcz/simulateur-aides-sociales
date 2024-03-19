@@ -15,13 +15,15 @@ class CalculateurTrimestreReferenceAAH:
         """
         Retourne le trimestre de référence qui doit être utilisé
         pour calculer l’AAH sur un mois donné
+        Il est retourné sous forme de Liste
         """
         for debut_trimestre in date_mensuelle_range(self.date_debut_aah, None, 3):
             if mois < debut_trimestre:
-                return {debut_trimestre-6,
-                        debut_trimestre-5,
-                        debut_trimestre-4
-                        }
+                return [
+                    debut_trimestre-6,
+                    debut_trimestre-5,
+                    debut_trimestre-4
+                    ]
 
 
 if __name__ == "__main__":

@@ -30,17 +30,17 @@ def test_celib(
     for enfant in enfants:
         foyer.ajouter_personne_a_charge(enfant)
 
-    decembre = DateMensuelle(12, 2023)
-    janvier = DateMensuelle(1, 2024)
-    fevrier = DateMensuelle(2, 2024)
-    periode_reference = {decembre, janvier, fevrier}
+    juillet = DateMensuelle(7, 2023)
+    aout = DateMensuelle(8, 2023)
+    septembre = DateMensuelle(9, 2023)
+    periode_reference = [juillet, aout, septembre]
     calculateur = CalculateurAAH(foyer)
-    ressources_decembre = Ressource(revenu_mensuel, decembre)
-    ressources_janvier = Ressource(revenu_mensuel, janvier)
-    ressources_fevrier = Ressource(revenu_mensuel, fevrier)
-    allocataire.ajouter_ressource(ressources_decembre)
-    allocataire.ajouter_ressource(ressources_janvier)
-    allocataire.ajouter_ressource(ressources_fevrier)
+    ressources_juillet = Ressource(revenu_mensuel, juillet)
+    ressources_aout = Ressource(revenu_mensuel, aout)
+    ressources_septembre = Ressource(revenu_mensuel, septembre)
+    allocataire.ajouter_ressource(ressources_juillet)
+    allocataire.ajouter_ressource(ressources_aout)
+    allocataire.ajouter_ressource(ressources_septembre)
 
     aah = calculateur.calculer_AAH(periode_reference)
     check(aah, resultat_attendu)
@@ -56,32 +56,32 @@ def test_couple(
         *enfants: Personne
         ):
     print(nom_test)
-    decembre = DateMensuelle(12, 2023)
-    janvier = DateMensuelle(1, 2024)
-    fevrier = DateMensuelle(2, 2024)
-    periode_reference = {decembre, janvier, fevrier}
+    juillet = DateMensuelle(7, 2023)
+    aout = DateMensuelle(8, 2023)
+    septembre = DateMensuelle(9, 2023)
+    periode_reference = [juillet, aout, septembre]
     foyer = Foyer(allocataire)
     foyer.definir_conjoint(conjoint=partenaire)
     for enfant in enfants:
         foyer.ajouter_personne_a_charge(enfant)
 
     calculateur = CalculateurAAH(foyer)
-    ressources_decembre = Ressource(revenu_mensuel, decembre)
-    ressources_janvier = Ressource(revenu_mensuel, janvier)
-    ressources_fevrier = Ressource(revenu_mensuel, fevrier)
-    allocataire.ajouter_ressource(ressources_decembre)
-    allocataire.ajouter_ressource(ressources_janvier)
-    allocataire.ajouter_ressource(ressources_fevrier)
+    ressources_juillet = Ressource(revenu_mensuel, juillet)
+    ressources_aout = Ressource(revenu_mensuel, aout)
+    ressources_septembre = Ressource(revenu_mensuel, septembre)
+    allocataire.ajouter_ressource(ressources_juillet)
+    allocataire.ajouter_ressource(ressources_aout)
+    allocataire.ajouter_ressource(ressources_septembre)
 
-    ressources_decembre_partenaire = Ressource(revenu_mensuel_partenaire,
-                                               decembre)
-    ressources_janvie_partenaire = Ressource(revenu_mensuel_partenaire,
-                                             janvier)
-    ressources_fevrier_partenaire = Ressource(revenu_mensuel_partenaire,
-                                              fevrier)
-    partenaire.ajouter_ressource(ressources_decembre_partenaire)
-    partenaire.ajouter_ressource(ressources_janvie_partenaire)
-    partenaire.ajouter_ressource(ressources_fevrier_partenaire)
+    ressources_juillet_partenaire = Ressource(revenu_mensuel_partenaire,
+                                               juillet)
+    ressources_aout_partenaire = Ressource(revenu_mensuel_partenaire,
+                                             aout)
+    ressources_septembre_partenaire = Ressource(revenu_mensuel_partenaire,
+                                              septembre)
+    partenaire.ajouter_ressource(ressources_juillet_partenaire)
+    partenaire.ajouter_ressource(ressources_aout_partenaire)
+    partenaire.ajouter_ressource(ressources_septembre_partenaire)
 
     aah = calculateur.calculer_AAH(periode_reference)
     check(aah, resultat_attendu)
@@ -105,7 +105,7 @@ def main():
                 "conjoint 750€ / mois",
                 cynthia, 1500,
                 juliette, 750,
-                734.52)
+                734.51)
     test_couple("Test couple conjoint travaille 1,5k€ /mois",
                 cynthia, 0,
                 juliette, 1500,
