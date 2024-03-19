@@ -1,9 +1,9 @@
 from calculateur_aah import CalculateurAAH
-from personne import Personne
-from ressource import Ressource
-from date_mensuelle import DateMensuelle
+from model.personne import Personne
+from model.ressource import Ressource
+from date_mensuelle.date_mensuelle import DateMensuelle
 from datetime import date
-from foyer import Foyer
+from model.foyer import Foyer
 
 RED = '\033[31m'
 GREEN = '\033[32m'

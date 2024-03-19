@@ -1,5 +1,5 @@
-from date_mensuelle import DateMensuelle
-from date_mensuelle_interval import DateMensuelleInterval
+from date_mensuelle.date_mensuelle import DateMensuelle
+from date_mensuelle.date_mensuelle_interval import DateMensuelleInterval
 
 class ConstantesAAH:
     """
@@ -42,11 +42,11 @@ class ConstantesAAH:
         }
 
         self._abattement_annuel_conjoint = {
-            DateMensuelleInterval(DateMensuelle(1, 2022), DateMensuelle(10, 2023)): 5000
+            DateMensuelleInterval(DateMensuelle(1, 2022)): 5000
         }
 
         self._abattement_annuel_conjoint_par_enfant = {
-            DateMensuelleInterval(DateMensuelle(1, 2022), DateMensuelle(10, 2023)): 1400
+            DateMensuelleInterval(DateMensuelle(1, 2022)): 1400
         }
 
     def __recherche_generique(self, dict):

@@ -1,4 +1,4 @@
-from date_mensuelle import DateMensuelle
+from date_mensuelle.date_mensuelle import DateMensuelle
 
 class Foyer:
     """

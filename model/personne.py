@@ -1,5 +1,5 @@
 from datetime import date
-from ressource import Ressource
+from model.ressource import Ressource
 
 
 class Personne:

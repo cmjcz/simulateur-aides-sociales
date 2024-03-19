@@ -1,9 +1,9 @@
-from calculateur_aah import CalculateurAAH
-from personne import Personne
-from date_mensuelle import DateMensuelle
-from ressource import Ressource
-from foyer import Foyer
-from calculateur_trimestre_reference_aah import CalculateurTrimestreReferenceAAH
+from calculateur_aah.calculateur_aah import CalculateurAAH
+from model.personne import Personne
+from date_mensuelle.date_mensuelle import DateMensuelle
+from model.ressource import Ressource
+from model.foyer import Foyer
+from calculateur_aah.calculateur_trimestre_reference_aah import CalculateurTrimestreReferenceAAH
 
 
 class Controleur:

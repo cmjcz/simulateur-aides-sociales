@@ -1,5 +1,5 @@
-from date_mensuelle_iterator import date_mensuelle_range
-from date_mensuelle import DateMensuelle
+from date_mensuelle.date_mensuelle_iterator import date_mensuelle_range
+from date_mensuelle.date_mensuelle import DateMensuelle
 
 
 class CalculateurTrimestreReferenceAAH:

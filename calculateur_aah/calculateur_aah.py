@@ -1,6 +1,5 @@
-from constantes_aah import ConstantesAAH
-from foyer import Foyer
-from date_mensuelle import DateMensuelle
+from .constantes_aah import ConstantesAAH
+from model.foyer import Foyer
 from utils import plafond, plancher, abattement
 
 
@@ -11,6 +10,10 @@ class CalculateurAAH:
 
     L’objet ne devrait pas être réutilisé avec une autre situation
     en modifiant directement les attributs
+
+    Ce calculateur n’implémente que le calcul conjugalisé valable à partir de
+    Janvier 2022, prenant fin pour la majorité des allocataires en
+    Octobre 2023
 
     Attributs:
         foyer (Foyer): foyer sur lequel effectuer le calcul
